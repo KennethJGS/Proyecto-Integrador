@@ -1,0 +1,351 @@
+def main():
+  global empleados
+  global lista_datos
+
+empleados=[]
+
+lista_datos = ["Escribe el ID del empleado: ", 
+                 "Escribe el nombre del empleado: ", 
+                 "Escribe la edad del empleado: ",
+                 "Escribe el peso del empleado en kilogramos: ", 
+                 "Escribe la altura del empleado en metros: ", 
+                 "Tiene Diabetes? 1-SI 0-NO: ",
+                 "Sufre de Hipertensión? 1-SI 0-NO: ",
+                 "Enfermedad del corazón? 1-SI 0-NO: ",
+                 "Sufre de algún cáncer? 1-SI 0-NO: ",
+                 "Tabaquismo? 1-SI 0-NO: ",
+                 "Vacuna Covid? 1-Si 0-No: "]
+
+
+
+
+def alta_empleado():
+
+  print("")
+  print("Usted ha escogido 'Alta Empleado', por favor, ingrese correctamente los datos que se le pide.")
+  print("")
+  empleado = []
+
+  dato = 0
+  while dato < len(lista_datos):
+    
+    dato_nuevo = input(lista_datos[dato])
+
+    try:
+      if dato == 2 or dato == 3:
+        empleado.append(int(dato_nuevo))
+      elif dato == 4:
+        empleado.append(float(dato_nuevo))
+      else:
+        empleado.append(dato_nuevo)
+
+    except ValueError:
+      print("Ingresa CORRECTAMENTE el dato")
+      dato = dato - 1 
+    
+    dato += 1
+
+  empleados.append(empleado)
+
+
+
+
+def calcular_imc():
+ 
+  print("")
+  print("Usted ha escogido 'Calcular IMC'. A continuación, se le mostrará el IMC de cada empleado.")
+  print("También, se le mostrará el tipo de etiqueta dependiendo su IMC.")
+  print("")
+
+  contador_imc = [0, 0, 0, 0, 0, 0, 0, 0]
+  etiqueta = ["Delgadez severa", "Delgadez moderada", "Delgadez aceptable", "Normal", "Pre-obesidad", "Obesidad tipo I", "Obesidad tipo II", "Obesidad tipo III"]
+
+  print("")
+
+  print(f'{"Clasificación IMC":<20}{"IMC":<10}{"ID":<10}{"Nombre":<15}{"Peso":<10}{"Altura":<10}{"Enfermedades":^77}{"Vacuna Covid":<12}')
+  
+
+  for empleado in empleados:
+    
+    id, nombre, edad, peso, altura, diabetes, hipertension, corazon, cancer, tabaquismo, vacuna_covid = empleado
+
+    imc = peso / (altura ** 2)
+    
+    if imc < 16:
+      clasificacion = etiqueta[0]
+      contador_imc[0] += 1
+
+    elif 16 <= imc and imc < 17:
+      clasificacion = etiqueta[1]
+      contador_imc[1] += 1
+
+    elif 17 <= imc and imc < 18.50:
+      clasificacion = etiqueta[2]
+      contador_imc[2] += 1
+
+    elif 18.50 <= imc and imc < 25:
+      clasificacion = etiqueta[3]
+      contador_imc[3] += 1
+
+    elif 25 <= imc and imc < 30:
+      clasificacion = etiqueta[4]
+      contador_imc[4] += 1
+
+    elif 30 <= imc and imc < 35:
+      clasificacion = etiqueta[5]
+      contador_imc[5] += 1
+
+    elif 35 <= imc and imc < 40:
+      clasificacion = etiqueta[6]
+      contador_imc[6] += 1
+
+    else:
+      clasificacion = etiqueta[7]
+      contador_imc[7] += 1
+
+    imc = round(imc, 2)
+    
+    print(f'{clasificacion:<20}{imc:<10}{id:<10}{nombre:<15}{peso:<10}{altura:<10}{"Diabetes" if diabetes == "1" else "_":15}{"Hipertensión" if hipertension == "1" else "_":17}{"Corazón" if corazon == "1" else "_":15}{"Cáncer" if cancer == "1" else "_":15}{"Tabaquismo" if tabaquismo == "1" else "_":15}{"Vacunado" if vacuna_covid == "1" else "_":15}')
+  
+  print(f'\n{"Clasificación":27}{"Cantidad":10}{"Porcentaje":<10}')
+
+
+  lista = []
+  for num in range(len(contador_imc)):
+    lista_temp = []
+    lista_temp = [contador_imc[num], etiqueta[num], round(contador_imc[num] / len(empleados) * 100)]
+    lista.append(lista_temp)
+  
+  lista.sort(reverse = True)
+
+  for dato in lista:
+    contador, etiqueta_imc, porcentaje = dato
+    print(f"{etiqueta_imc:20} {contador:7} {porcentaje:10}%")
+  
+  print(f'{"Total de empleados:":<10} {len(empleados):<10}')
+
+
+
+def actualizar_empleado():
+
+  print("")
+  print("Usted ha escogido 'Actualizar Empleado'.")
+  print("")
+
+  id_cambio = input("Ingresa el ID del empleado que deseas actualizar: ")
+  
+  for num in range(len(empleados)):
+    
+    empleado = empleados[num]
+    
+    id_empleado = empleado[0]
+
+    if id_empleado == id_cambio:
+      existe = True
+      no_empleado = int(num)
+      break
+    else:
+      existe = False
+
+  if existe == True:
+    print("El empleado si existe")
+
+
+
+    id, nombre, edad, peso, altura, diabetes, hipertension, corazon, cancer, tabaquismo, vacuna_covid = empleados[no_empleado]
+
+
+
+    print(f'{"ID":<10}{"Nombre":<15}{"Peso":<10}{"Altura":<10}{"Enfermedades":^77}{"Vacuna Covid":<12}')
+    print(f'{id:<10}{nombre:<15}{peso:<10}{altura:<10}{"Diabetes" if diabetes == "1" else "_":15}{"Hipertensión" if hipertension == "1" else "_":17}{"Corazón" if corazon == "1" else "_":15}{"Cáncer" if cancer == "1" else "_":15}{"Tabaquismo" if tabaquismo == "1" else "_":15}{"Vacunado" if vacuna_covid == "1" else "_":15}')
+    
+    confirmacion = input("Si deseas cambiar los datos del empleado indica 'si', de lo contrario, ingresa cualquier cosa para volver al menú: ")
+    if confirmacion.lower() == "si":
+      empleado = []
+      
+      dato = 0
+      while dato < len(lista_datos):
+        
+        dato_nuevo = input(lista_datos[dato])
+        
+        try:
+
+          if dato == 2 or dato == 3:
+            empleado.append(int(dato_nuevo))
+          elif dato == 4:
+            empleado.append(float(dato_nuevo))
+          else:
+            empleado.append(dato_nuevo)
+
+        except ValueError:
+          print("Ingresa CORRECTAMENTE el dato")
+          dato = dato - 1 
+        
+        dato += 1
+
+
+
+      id, nombre, edad, peso, altura, diabetes, hipertension, corazon, cancer, tabaquismo, vacuna_covid = empleado
+
+      print(f'Los datos actualizados del empleado son:\n{"ID":<10}{"Nombre":<15}{"Peso":<10}{"Altura":<10}{"Enfermedades":^77}{"Vacuna Covid":<12}')
+      print(f'{id:<10}{nombre:<15}{peso:<10}{altura:<10}{"Diabetes" if diabetes == "1" else "____________":15}{"Hipertensión" if hipertension == "1" else "____________":17}{"Corazón" if corazon == "1" else "_":15}{"Cáncer" if cancer == "1" else "_":15}{"Tabaquismo" if tabaquismo == "1" else "_":15}{"Vacunado" if vacuna_covid == "1" else "_":15}')
+    
+      confirmacion = input("Si deseas cambiar los datos del empleado indica 'si', de lo contrario, ingresa cualquier cosa para volver al menú: ")
+      if confirmacion.lower() == "si":
+        empleados[no_empleado] = empleado
+  else:
+    print("Este empleado no existe, ingresa otra ID")
+    print("")
+    actualizar_empleado()
+
+
+
+
+def consultar_empleado():
+
+  print("")
+  print("Usted ha escogido 'Consultar Empleado'.")
+  print("")
+  
+  while True:
+    id_cambio = input("Ingresa el ID del empleado que deseas consultar: ")
+    
+    for num in range(len(empleados)):
+      
+      empleado = empleados[num]
+      
+      id_empleado = empleado[0]
+
+      if id_empleado == id_cambio:
+        existe = True
+        no_empleado = int(num)
+        break
+      else:
+        existe = False
+
+    if existe == True:
+      print("El empleado si existe")
+          
+      id, nombre, edad, peso, altura, diabetes, hipertension, corazon, cancer, tabaquismo, vacuna_covid = empleado
+
+      print(f'{"ID":<10}{"Nombre":<15}{"Peso":<10}{"Altura":<10}{"Enfermedades":^77}{"Vacuna Covid":<12}')
+      print(f'{id:<10}{nombre:<15}{peso:<10}{altura:<10}{"Diabetes" if diabetes == "1" else "_":15}{"Hipertensión" if hipertension == "1" else "_":17}{"Corazón" if corazon == "1" else "_":15}{"Cáncer" if cancer == "1" else "_":15}{"Tabaquismo" if tabaquismo == "1" else "_":15}{"Vacunado" if vacuna_covid == "1" else "_":15}')
+        
+    else:
+      print("El empleado no existe, intenta con otro ID")
+
+    confirmacion = input("Si deseas consultar otro empleado indica 'si', de lo contrario, ingresa cualquier cosa para volver al menú: ")
+    if confirmacion.lower() == "si":
+      continue
+    else:
+      break
+
+
+
+
+def crear_reporte_empleado():
+
+  print("")
+  print("Usted ha escogido 'Reporte de Empleados'.")
+  print("A continuación, se le mostrará todos los empleados")
+
+  contador_enfermedades = [0, 0, 0, 0, 0, 0]
+  enfermedad = ["Diabetes", "Hipertensión", "Corazón", "Cáncer", "Tabaquismo", "Vacuna Covid"]
+
+  print(f'{"ID":<10}{"Nombre":<15}{"Peso":<10}{"Altura":<10}{"Enfermedades":^77}{"Vacuna Covid":<12}')
+  
+  for empleado in empleados:
+
+    id, nombre, edad, peso, altura, diabetes, hipertension, corazon, cancer, tabaquismo, vacuna_covid = empleado
+
+    if diabetes == "1":
+      contador_enfermedades[0] += 1
+    if hipertension == "1":
+      contador_enfermedades[1] += 1
+    if corazon == "1":
+      contador_enfermedades[2] += 1
+    if cancer == "1":
+      contador_enfermedades[3] += 1
+    if tabaquismo == "1":
+      contador_enfermedades[4] += 1
+    if vacuna_covid == "1":
+      contador_enfermedades[5] += 1
+
+    print(f'{id:<10}{nombre:<15}{peso:<10}{altura:<10}{"Diabetes" if diabetes == "1" else "_":15}{"Hipertensión" if hipertension == "1" else "_":17}{"Corazón" if corazon == "1" else "_":15}{"Cáncer" if cancer == "1" else "_":15}{"Tabaquismo" if tabaquismo == "1" else "_":15}{"Vacunado" if vacuna_covid == "1" else "_":15}')
+  
+  print(f'\n{"Enfermedad":27}{"Cantidad":10}{"Porcentaje":<10}')
+
+  lista = []
+  for num in range(len(contador_enfermedades)):
+    lista_temp = []
+    lista_temp = [contador_enfermedades[num], enfermedad[num], round(contador_enfermedades[num] / len(empleados) * 100)]
+    lista.append(lista_temp)
+  
+  lista.sort(reverse = True)
+
+  for dato in lista:
+    contador, enfermedad, porcentaje = dato
+    print(f"{enfermedad:20} {contador:7} {porcentaje:10}%")
+
+  print(f'{"Total de empleados:":<10} {len(empleados):<10}')
+
+
+
+
+
+
+def menu():
+  print("""Menú de opciones:
+1.- Alta de empleado 
+2.- Calcular imc de empleado
+3.- Cambia información del empleado
+4.- Consulta un empleado
+5.- Reporte de todos los empleados
+6.- Salir""" )
+  
+  opcion = int(input("Selecciona una opción: "))
+
+  return opcion
+
+
+
+
+def salir():
+  print("")
+  print("Gracias por usar el programa :D")
+  sigue = False
+
+  return sigue
+
+
+
+
+def main():
+  
+  sigue = True
+  
+  while sigue:
+   
+    opcion = menu()
+    
+    if opcion < 1 or opcion > 6:
+      print("")
+      print("El número no se encuentra en el rango. Selecciona un número del 1 al 6 dependiento tu elección.")
+      print("")
+      continue
+    elif opcion == 1:
+      alta_empleado()
+    elif opcion == 2:
+      calcular_imc()
+    elif opcion == 3:
+      actualizar_empleado()
+    elif opcion == 4:
+      consultar_empleado()
+    elif opcion == 5:
+      crear_reporte_empleado()
+    else:
+      sigue = salir()
+
+
+
+main()
